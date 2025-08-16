@@ -16,7 +16,7 @@ void setuo_gpio() {
     gpio_set_direction(LED_PIN_2, GPIO_MODE_OUTPUT);
     
     }
-//
+
 void loop(void *pvParameter) {
     //counter until 10 seconds then reset
     gpio_num_t LED_PIN = (gpio_num_t)pvParameter;
