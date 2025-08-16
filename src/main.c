@@ -16,18 +16,35 @@ void setuo_gpio() {
     gpio_set_direction(LED_PIN_2, GPIO_MODE_OUTPUT);
     
     }
-   
+//
 void loop(void *pvParameter) {
     //counter until 10 seconds then reset
     gpio_num_t LED_PIN = (gpio_num_t)pvParameter;
-    while(currentTime < 10 * 1000000) {
+    while(1) {
         if(currentTime >= 10 * 1000000) {
             gpio_set_level(LED_PIN, 1);
-            vTaskDelay(3000 / portTICK_PERIOD_MS); // 3 seconds delay            
-            currentTime = 0; // Reset the counter
+            vTaskDelay(1000 / portTICK_PERIOD_MS);// 1 second delay    
+            currentTime = 0; // Reset the counter?
             }
-            else {
+        else {
             gpio_set_level(LED_PIN, 0);
-            }
+        }
     }
+}
+// Second task to blink LED_PIN_2 every second for 10 seconds
+void loop2(void *pvParameter) {
+    gpio_num_t LED_PIN = (gpio_num_t)pvParameter;
+    while(1) {
+        if (currentTime < 10 * 1000000) {
+            gpio_set_level(LED_PIN, 1);
+            vTaskDelay(1000 / portTICK_PERIOD_MS); // 1 second delay
+        }
+
+        
+    }
+}
+void start_task() {
+    setuo_gpio();
+    xTaskCreate(loop, "loop", 2048, (void *)LED_PIN_1, 5, NULL);
+    xTaskCreate(loop, "loop2", 2048, (void *)LED_PIN_2, 5, NULL);
 }
