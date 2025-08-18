@@ -2,55 +2,41 @@
 #include <freertos/FreeRTOS.h>
 #include <esp_system.h>
 #include <freertos/task.h>
-#include <esp_timer.h>
-#define LED_PIN_1 2
-#define LED_PIN_2 1
+#include <stdio.h>
+#include <driver/timer.h>
 
-int currentTime = 0;
+#define LED_PIN_1 12
 
-void app_main() {}
-    
+
+
 //set up GPIO pins for output
 void setuo_gpio() {
     gpio_set_direction(LED_PIN_1, GPIO_MODE_OUTPUT);
-    gpio_set_direction(LED_PIN_2, GPIO_MODE_OUTPUT);
     
-    }
+}
 
 void loop1(void *pvParameter) {
     gpio_num_t LED_PIN = (gpio_num_t)pvParameter;
+    int currentTime = 0; 
     while(1) {
-        esp_timer_start_once(( {
-            .callback = NULL,
-            .name = "timer"
-        }), 1000000); // 1 second timer
-            
-        if (currentTime <= 10 * 1000000)  {
+        if (currentTime < 10) {
             gpio_set_level(LED_PIN, 1);
-            vTaskDelay(1000 / portTICK_PERIOD_MS); // 1 second delay
+            vTaskDelay(500/ portTICK_PERIOD_MS);// 0.5 second delay
             gpio_set_level(LED_PIN, 0);
-            vTaskDelay(1000 / portTICK_PERIOD_MS); // 1 second delay
-            currentTime += 1000000; // Increment the counter by 1 second
+            vTaskDelay(500 / portTICK_PERIOD_MS); // 0.5 second
         }
-        if (currentTime >= 1 * 1000000) {
+        if (currentTime >= 10 ) { // Check if 10 seconds have passed
             gpio_set_level(LED_PIN, 1);
-            vTaskDelay(10000 / portTICK_PERIOD_MS);// 10 second delay    
-        }
+            vTaskDelay(5000 / portTICK_PERIOD_MS); // 5 second delay
+            currentTime = 0; // Reset current time
+            }
+
+    currentTime += 1; // Increment current time by 1 second
+        
     }
 }
-void loop2(void *pvParameter) {
-    gpio_num_t LED_PIN = (gpio_num_t)pvParameter;
-    while(1) {
-        if (currentTime >= 1 * 100000) {
-            gpio_set_level(LED_PIN, 1);
-            vTaskDelay(1000 / portTICK_PERIOD_MS); // 1 second delay
-            gpio_set_level(LED_PIN, 0);
-            vTaskDelay(1000 / portTICK_PERIOD_MS); // 1 second delay
-        }
-    }
+void app_main() {
+    setuo_gpio(); // Set up GPIO pins for output
+    xTaskCreate(loop1, "loop1", 2048, (void *)LED_PIN_1, 5, NULL); // Create task for LED_PIN_1
 }
-void start_task() {
-    setuo_gpio();
-    xTaskCreate(loop1, "loop", 2048, (void *)LED_PIN_1, 5, NULL);
-    xTaskCreate(loop2, "loop2", 2048, (void *)LED_PIN_2, 5, NULL);
-}
+    
