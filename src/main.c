@@ -2,8 +2,6 @@
 #include <freertos/FreeRTOS.h>
 #include <esp_system.h>
 #include <freertos/task.h>
-#include <stdio.h>
-#include <driver/timer.h>
 
 #define LED_PIN_1 12
 
