@@ -15,31 +15,25 @@ void loop(void *pvParameter) {
     gpio_num_t LED_PIN = (gpio_num_t)pvParameter;
     int looped = 0; 
     while(1) {
-        if (currentTime < 10) {
+        if (looped < 10) {
+            gpio_set_level(LED_PIN_2, 0);
             gpio_set_level(LED_PIN, 1);
-            vTaskDelay(500/ portTICK_PERIOD_MS);// 0.5 second delay
+            vTaskDelay(pdMS_TO_TICKS(500));
             gpio_set_level(LED_PIN, 0);
-            vTaskDelay(500 / portTICK_PERIOD_MS); // 0.5 second
+            vTaskDelay(pdMS_TO_TICKS(500));
         }
-        
-    currentTime += 1; // Increment current time by 1 second
-        
-    }
-}
-void loop2(void *pvParameter) {
-    gpio_num_t LED_PIN = (gpio_num_t)pvParameter;
-    extern int currentTime;
-    while(1) {
-        if (currentTime >= 10) { // Check if 10 seconds have passed
-            gpio_set_level(LED_PIN, 1);
-            vTaskDelay(5000 / portTICK_PERIOD_MS); // 5 second delay
-            currentTime = 0; // Reset current time
+        else {
+            gpio_set_level(LED_PIN_2, 1);
+            gpio_set_level(LED_PIN_1,LED_PIN_2 ? 1 : 1);
+            vTaskDelay(pdMS_TO_TICKS(5000));
+            looped = 0; // Reset loop
         }
+    looped += 1;    
     }
 }
 void app_main() {
     setuo_gpio(); // Set up GPIO pins for output
-    xTaskCreate(loop1, "loop1", 2048, (void *)LED_PIN_1, 5, NULL); 
-    xTaskCreate(loop2, "loop2", 2048, (void *)LED_PIN_2, 5, NULL); 
+    xTaskCreate(loop, "loop1", 2048, (void *)LED_PIN_1, 5, NULL); 
 }
+
     
