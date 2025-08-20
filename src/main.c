@@ -11,8 +11,7 @@ void setuo_gpio() {
     gpio_set_direction(LED_PIN_1, GPIO_MODE_OUTPUT);
     gpio_set_direction(LED_PIN_2, GPIO_MODE_OUTPUT);
 }
-
-void loop1(void *pvParameter) {
+void loop(void *pvParameter) {
     gpio_num_t LED_PIN = (gpio_num_t)pvParameter;
     int looped = 0; 
     while(1) {
@@ -25,15 +24,16 @@ void loop1(void *pvParameter) {
         }
         else {
             gpio_set_level(LED_PIN_2, 1);
-            gpio_set_level(LED_PIN_2, LED_PIN_1 ? 1 : 1);
+            gpio_set_level(LED_PIN_1,LED_PIN_2 ? 1 : 1);
             vTaskDelay(pdMS_TO_TICKS(5000));
-            looped = 0; // Reset loop count
+            looped = 0; // Reset loop
         }
-    looped += 1 ;
+    looped += 1;    
     }
 }
 void app_main() {
     setuo_gpio(); // Set up GPIO pins for output
-    xTaskCreate(loop1, "loop1", 2048, (void *)LED_PIN_1, 5, NULL); 
+    xTaskCreate(loop, "loop1", 2048, (void *)LED_PIN_1, 5, NULL); 
 }
+
     
