@@ -11,6 +11,9 @@ void setuo_gpio() {
     gpio_set_direction(LED_PIN_1, GPIO_MODE_OUTPUT);
     gpio_set_direction(LED_PIN_2, GPIO_MODE_OUTPUT);
 }
+
+/* - It is good to have some vertical space between functions - for visual separation */
+
 void loop(void *pvParameter) {
     gpio_num_t LED_PIN = (gpio_num_t)pvParameter;
     int looped = 0; 
@@ -32,7 +35,15 @@ void loop(void *pvParameter) {
     }
 }
 void app_main() {
+    /* 
+     * - Is there still a typo or is 'setuo_' intentional? 
+     */
     setuo_gpio(); // Set up GPIO pins for output
+
+    /* 
+     * - Can we skip FreeRTOS tasks for now? Let's keep all the logic within app_main for now.
+     *   Can you modify it that way or do you need my assistance? 
+     */
     xTaskCreate(loop, "loop1", 2048, (void *)LED_PIN_1, 5, NULL); 
 }
 
