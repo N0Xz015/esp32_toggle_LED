@@ -6,6 +6,7 @@
 #define LED_PIN_1 12
 #define LED_PIN_2 13
 
+
 void loop(void *pvParameter) {
     gpio_num_t LED_PIN = (gpio_num_t)pvParameter;
     int looped = 0; 
@@ -28,11 +29,10 @@ void loop(void *pvParameter) {
 }
 
 void app_main() {
-    gpio_set_direction(LED_PIN_1, GPIO_MODE_OUTPUT);
-    gpio_set_direction(LED_PIN_2, GPIO_MODE_OUTPUT); 
-    //sorry i got it now.
-
-    xTaskCreate(loop, "loop1", 2048, (void *)LED_PIN_1, 5, NULL); 
+   gpio_set_direction(LED_PIN_1, GPIO_MODE_OUTPUT);
+   gpio_set_direction(LED_PIN_2, GPIO_MODE_OUTPUT);
+  
+   xTaskCreate(loop, "loop1", 2048, (void *)LED_PIN_1, 5, NULL); 
 }
 
     
