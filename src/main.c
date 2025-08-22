@@ -19,6 +19,7 @@ void loop1(void *pvParameter) {
             vTaskDelay(pdMS_TO_TICKS(500)); // 0.5 second
         }
         else {
+            gpio_set_level(LED_PIN_2, 1);
             gpio_set_level(LED_PIN_1,LED_PIN_2 ? 1 : 1);
             vTaskDelay(pdMS_TO_TICKS(5000)); // 1 second delay
             looped = 0; // Reset loop
