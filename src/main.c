@@ -13,11 +13,11 @@ const gpio_num_t LED_PIN = GPIO_NUM_13;
 
 void app_main() {
 
-    // i got you
-    uint64_t CurrenTime = 0;       
-    uint64_t LastToggle = 0; 
-    size_t BlinkCount = 0;          
-    bool LEDState = false;           
+    
+    uint64_t CURRENT_TIME = 0;
+    uint64_t LAST_TOGGLE = 0;
+    size_t BLINK_COUNT = 0;
+    bool LEDSTATE = false;
    
     gpio_set_direction(LED_PIN, GPIO_MODE_OUTPUT);
 
@@ -32,11 +32,10 @@ void app_main() {
             
             LastToggle = CurrenTime;
             
-            if (LEDState == false) { // when time has come if LED off
-                LEDState = true; // so this line will change LEDState to on
-                gpio_set_level(LED_PIN, LEDState); // this line will set LED pin to on from upper line
-                BlinkCount++;
-                ESP_LOGD(TAG, "LED state: %d, counter: %u", LEDState, BlinkCount);
+            if (LEDSTATE == false) { // when time has come if LED off set to on
+                gpio_set_level(LED_PIN, LEDSTATE);
+                BLINK_COUNT++;
+                ESP_LOGD(TAG, "LED state: %d, counter %u", LEDSTATE, BLINK_COUNT);
             }
 
             else { // when time has come if LED on
