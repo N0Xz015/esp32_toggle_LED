@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <esp_log.h>
+#include "esp_log.h"
 #include "driver/gpio.h"
 #include "esp_timer.h"
 #include "esp_task_wdt.h"
@@ -13,11 +13,11 @@ const gpio_num_t LED_PIN = GPIO_NUM_13;
 
 void app_main() {
 
-    
-    uint64_t CURRENT_TIME = 0;
-    uint64_t LAST_TOGGLE = 0;
-    size_t BLINK_COUNT = 0;
-    bool LEDSTATE = false;
+    //i got you
+    uint64_t CurrentTime = 0;
+    uint64_t LastToggle = 0;
+    size_t BlinkCount = 0;
+    bool LEDState = false;
    
     gpio_set_direction(LED_PIN, GPIO_MODE_OUTPUT);
 
@@ -25,17 +25,18 @@ void app_main() {
     ESP_LOGI(TAG, "starting blinking...");
 
     while(true) {  
-        CurrenTime = (uint64_t) (esp_timer_get_time() / 1000);
-        ESP_LOGV(TAG, "Current time: %" PRIu64 " ms", CurrenTime);
+        CurrentTime = (uint64_t) (esp_timer_get_time() / 1000);
+        ESP_LOGV(TAG, "Current time: %" PRIu64 " ms", CurrentTime);
 
-        if (CurrenTime - LastToggle >= BLINK_PERIOD_MS) { 
+        if (CurrentTime - LastToggle >= BLINK_PERIOD_MS) { 
             
-            LastToggle = CurrenTime;
+            LastToggle = CurrentTime;
             
-            if (LEDSTATE == false) { // when time has come if LED off set to on
-                gpio_set_level(LED_PIN, LEDSTATE);
-                BLINK_COUNT++;
-                ESP_LOGD(TAG, "LED state: %d, counter %u", LEDSTATE, BLINK_COUNT);
+            if (LEDState == false) { // when time has come if LED off
+                LEDState = true; // so this line will set "LEDState" to on
+                gpio_set_level(LED_PIN, LEDState); // this line will turn LED light to on
+                BlinkCount++;
+                ESP_LOGD(TAG, "LED state: %d, counter %u", LEDState, BlinkCount);
             }
 
             else { // when time has come if LED on
