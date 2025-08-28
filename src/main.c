@@ -1,23 +1,23 @@
 #include <stdio.h>
+#include <esp_log.h>
 #include "driver/gpio.h"
 #include "esp_timer.h"
-#include "esp_log.h"
 #include "esp_task_wdt.h"
 
 const char* TAG = "LED BLINKER";
 
-#define BLINK_AMOUNT 10 
+#define BlinkAmount 10 
 #define BLINK_PERIOD_MS 500
 
 const gpio_num_t LED_PIN = GPIO_NUM_13;
 
 void app_main() {
 
-    /* CONST_ARE_UPCASE but regular variables areCamelCase - why always yell? */
-    uint64_t CURRENT_TIME = 0;       /* currentTime */
-    uint64_t LAST_TOGGLE = 0;        /* lastToggle */   
-    size_t BLINK_COUNT = 0;          /* blinkCounter */
-    bool LEDSTATE = false;           /* well, I guess you got it :) */
+    // i got you
+    uint64_t CurrenTime = 0;       
+    uint64_t LastToggle = 0; 
+    size_t BlinkCount = 0;          
+    bool LEDState = false;           
    
     gpio_set_direction(LED_PIN, GPIO_MODE_OUTPUT);
 
@@ -25,33 +25,34 @@ void app_main() {
     ESP_LOGI(TAG, "starting blinking...");
 
     while(true) {  
-        CURRENT_TIME = (uint64_t) (esp_timer_get_time() / 1000);
-        ESP_LOGV(TAG, "Current time: %" PRIu64 "ms", CURRENT_TIME);
+        CurrenTime = (uint64_t) (esp_timer_get_time() / 1000);
+        ESP_LOGV(TAG, "Current time: %" PRIu64 " ms", CurrenTime);
 
-        if (CURRENT_TIME - LAST_TOGGLE >= BLINK_PERIOD_MS) { 
+        if (CurrenTime - LastToggle >= BLINK_PERIOD_MS) { 
             
-            LAST_TOGGLE = CURRENT_TIME;
+            LastToggle = CurrenTime;
             
-            if (LEDSTATE == false) { // when time has come if LED off set to on /* That means the state is false (there is the value '0' written now) */ 
-                gpio_set_level(LED_PIN, LEDSTATE); /* So, we write that '0' into the LED GPIO, setting it to OFF, means no change */
-                BLINK_COUNT++;
-                ESP_LOGD(TAG, "LED state: %d, counter %u", LEDSTATE, BLINK_COUNT);
+            if (LEDState == false) { // when time has come if LED off
+                LEDState = true; // so this line will change LEDState to on
+                gpio_set_level(LED_PIN, LEDState); // this line will set LED pin to on from upper line
+                BlinkCount++;
+                ESP_LOGD(TAG, "LED state: %d, counter: %u", LEDState, BlinkCount);
             }
 
-            else { // when time has come if LED on turn it off
-                gpio_set_level(LED_PIN, false);
-                ESP_LOGD(TAG, "LED state: %d", LEDSTATE);
+            else { // when time has come if LED on
+                LEDState = false; // turn LEDState to off
+                gpio_set_level(LED_PIN, LEDState); // set LED pin to off
+                ESP_LOGD(TAG, "LED state: %d", LEDState);
             }
 
         }
 
-        if(BLINK_COUNT >= BLINK_AMOUNT) {
-            gpio_set_level(LED_PIN, 1);
+        if(BlinkCount >= BlinkAmount) {
             break;
         }
 
-        vTaskDelay(5);
+        vTaskDelay(1);
     }
 
-    ESP_LOGI(TAG, "Blinking done. Blinked %u times...", BLINK_COUNT);
+    ESP_LOGI(TAG, "Blinking done. Blinked %u times...", BlinkCount);
 }
