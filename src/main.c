@@ -14,6 +14,18 @@ const gpio_num_t LED_PIN = GPIO_NUM_13;
 void app_main() {
 
     //i got you
+    /* This code looks much better - well done!
+       Just a tiny little fix before we leave this project and move further.
+       You used PascalCase for the variables, tho, in my example it was camelCase.
+       They're different of cause and they have their purpose.
+       Let's summarize the convention:
+        - CONST_VARIABLES and ALL_MACROS() - these guys evaulate in Compile Time
+        - variablesAcrossTheProject - these are 'normal' variables
+        - abbreviationsComeLikeAbc (not abbreviationABC or myWIFI - always myWifiNetwork) 
+        - MyClass, StructType_s, AnotherEnum_e - classes and our custom types will be PascalCase - we'll get to it soon!
+
+       The rest looks good! Congrats! 
+    */
     uint64_t CurrentTime = 0;
     uint64_t LastToggle = 0;
     size_t BlinkCount = 0;
